@@ -1,10 +1,11 @@
 image: Visual Studio 2015
 
 environment:
+  target: x86_64-pc-windows-msvc
   matrix:
-    - nodejs_version: 8
-      rust_version: nightly
-      target: x86_64-pc-windows-msvc
+    - rust_version: stable
+    - rust_version: beta
+    - rust_version: nightly
 
 platform:
   - x64
@@ -12,7 +13,6 @@ platform:
 version: '{build}'
 
 install:
-  - ps: Install-Product node $env:nodejs_version
   - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
   - rustup-init -yv --default-toolchain %rust_version% --default-host %target%
   - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
@@ -25,7 +25,5 @@ test_script:
   - cargo --version
   - rustup --version
 
-  - node --version
-  - npm --version
-
+  - cargo build
   - cargo test
