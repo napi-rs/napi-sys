@@ -1,7 +1,17 @@
-[workspace]
-members = [
-  "napi",
-  "napi-derive",
-  "napi-sys",
-  "example",
-]
+[package]
+name = "napi-sys"
+version = "0.1.1"
+authors = ["Alexey Orlenko <eaglexrlnk@gmail.com>"]
+license = "MIT"
+description = "Low-level bindings to Node.js N-API"
+repository = "https://github.com/napi-rs/napi-sys"
+readme = "README.md"
+keywords = ["node", "nodejs", "n-api", "addons", "bindings"]
+categories = ["external-ffi-bindings"]
+
+[badges]
+travis-ci = { repository = "napi-rs/napi-sys" }
+appveyor = { repository = "napi-rs/napi-sys" }
+maintenance = { status = "experimental" }
+
+[dependencies]
