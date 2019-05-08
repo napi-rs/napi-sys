@@ -2,13 +2,22 @@
 
 set -e
 
-which bindgen || cargo install bindgen
-which rustfmt || cargo install rustfmt-nightly
+# make sure bindgen and rustfmt are available
+# otherwise throw an error
+which bindgen > /dev/null || (echo "`bindgen` not available, please install it with `cargo install bindgen`" && exit 1)
+(rustup component list | grep rustfmt > /dev/null) || (echo "`rustfmt` not available, please install it with `rustup component add rustfmt`" && exit 1)
+
+NAPI_HEADER=`realpath "$(dirname $(which node))/../include/node/node_api.h"`
+
+echo "Building bindings with header file '$NAPI_HEADER'..."
 
 bindgen -o src/bindings.rs \
         --whitelist-function 'napi_.+' \
         --whitelist-type 'napi_.+' \
-        "$1"
+        --default-enum-style 'rust' \
+        "$NAPI_HEADER"
 
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(rustc --print sysroot)/lib \
-  rustfmt crates/napi-sys/src/bindings.rs
+cargo fmt -- --check src/bindings.rs
+cargo test
+
+echo "Bindings generated successfully."
